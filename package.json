@@ -1,7 +1,7 @@
 {
   "name": "pide",
   "version": "1.0.0",
-  "description": "Learning node, express and mongoDB",
+  "description": "Pide Software House Digitization",
   "main": "app.js",
   "scripts": {
     "start": "nodemon server.js"
