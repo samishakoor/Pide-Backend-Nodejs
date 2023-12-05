@@ -1,6 +1,7 @@
 const Bank = require("./../models/bankModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
+const verifyToken = require("./../utils/verifyToken");
 
 exports.getAllBankDocuments = catchAsync(async (res) => {
   const allBankDocuments = await Bank.find();
@@ -28,12 +29,19 @@ exports.getBankDocuments = catchAsync(async (req, res, next) => {
 });
 
 exports.createBankDocuments = catchAsync(async (req, res) => {
-  console.log(req.body);
-  const newBankDocuments = await Bank.create(req.body);
+  const { documents, token } = req.body;
+
+  const tokenStatus = verifyToken(token);
+  if (tokenStatus == "expired token") {
+    return next(new AppError("token expired", 404));
+  }
+
+  Bank.create({
+    ...documents,
+    userId: tokenStatus.id,
+  });
+
   res.status(201).json({
     status: "success",
-    data: {
-      bankDocuments: newBankDocuments,
-    },
   });
 });

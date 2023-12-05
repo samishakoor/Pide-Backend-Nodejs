@@ -1,6 +1,7 @@
 const Pseb = require("./../models/psebModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
+const verifyToken = require("./../utils/verifyToken");
 
 exports.getAllPsebDocuments = catchAsync(async (res) => {
   const allPsebDocuments = await Pseb.find();
@@ -13,7 +14,6 @@ exports.getAllPsebDocuments = catchAsync(async (res) => {
     },
   });
 });
-
 
 exports.getPsebDocuments = catchAsync(async (req, res, next) => {
   console.log(req.params);

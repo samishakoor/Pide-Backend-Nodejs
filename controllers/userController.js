@@ -2,7 +2,6 @@ const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const verifyToken = require("./../utils/verifyToken");
 const AppError = require("./../utils/appError");
-const jwt = require("jsonwebtoken");
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   console.log("all");
@@ -17,8 +16,14 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const { token } = req.body;
-  const tokenStatus = verifyToken(token);
+  const authorizationHeader = req.headers["authorization"];
+  if (!authorizationHeader) {
+    return next(new AppError("'Authorization header is missing'", 401));
+  }
+
+  const token = authorizationHeader.split(" ")[1];
+  const secret=process.env.JWT_SECRET;
+  const tokenStatus = verifyToken(token,secret);
   if (tokenStatus == "expired token") {
     return next(new AppError("token expired", 404));
   }
@@ -32,14 +37,23 @@ exports.getUser = catchAsync(async (req, res, next) => {
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const { id, name, password } = req.body;
-
-  console.log(id);
-  console.log(req.body);
+  
+  const {name} = req.body;
+  const authorizationHeader = req.headers["authorization"];
+  if (!authorizationHeader) {
+    return next(new AppError("'Authorization header is missing'", 401));
+  }
+  const token = authorizationHeader.split(" ")[1];
+  const secret=process.env.JWT_SECRET;
+  const tokenStatus = verifyToken(token,secret);
+  
+  if (tokenStatus == "expired token") {
+    return next(new AppError("token expired", 404));
+  }
 
   const user = await User.findByIdAndUpdate(
-    { _id: id },
-    { name: name, password: password },
+    { _id: tokenStatus.id },
+    { name: name},
     {
       new: true,
       runValidators: true,

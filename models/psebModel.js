@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 const cnicOfDirectorSchema = new mongoose.Schema({
   cnic: {
     type: String,
@@ -61,8 +60,6 @@ const partnershipDeedSchema = new mongoose.Schema({
   },
 });
 
-
-
 const firmRegistrationCertificateSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -77,7 +74,6 @@ const firmRegistrationCertificateSchema = new mongoose.Schema({
     required: true,
   },
 });
-
 
 const feeChallanSchema = new mongoose.Schema({
   name: {
@@ -95,6 +91,11 @@ const feeChallanSchema = new mongoose.Schema({
 });
 
 const businessBankStatementSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+
   name: {
     type: String,
     required: true,
@@ -109,13 +110,12 @@ const businessBankStatementSchema = new mongoose.Schema({
   },
 });
 
-
 const psebSchema = new mongoose.Schema({
   cnicOfDirector: cnicOfDirectorSchema,
   incorporationCertificate: incorporationCertificateSchema,
   copyOfMou: copyOfMouSchema,
   partnershipDeed: partnershipDeedSchema,
-  firmRegistrationCertificate:  firmRegistrationCertificateSchema,
+  firmRegistrationCertificate: firmRegistrationCertificateSchema,
   feeChallan: feeChallanSchema,
   businessBankStatement: businessBankStatementSchema,
 });

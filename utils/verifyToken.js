@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
-module.exports = (token) => {
-  return jwt.verify(token, process.env.JWT_SECRET, (err, res) => {
+module.exports = (token,secret) => {
+  return jwt.verify(token, secret, (err, res) => {
     if (err) {
       return "token expired";
     }

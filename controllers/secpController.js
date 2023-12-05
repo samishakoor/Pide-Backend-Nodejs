@@ -1,6 +1,7 @@
 const Secp = require("./../models/secpModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
+const verifyToken = require("./../utils/verifyToken");
 
 exports.getAllSecpDocuments = catchAsync(async (res) => {
   const allSecpDocuments = await Secp.find();
