@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(helmet());
+app.use(express.static(__dirname));
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -26,6 +27,11 @@ if (process.env.NODE_ENV === "development") {
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
 });
 
 const limiter = rateLimit({

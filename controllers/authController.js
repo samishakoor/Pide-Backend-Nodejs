@@ -2,9 +2,8 @@ const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const signToken = require("./../utils/signToken");
-const sendMail = require("./../utils/sendMail");
+const sendEmail = require("./../utils/sendMail");
 
-const verifyToken = require("./../utils/verifyToken");
 const bcrypt = require("bcryptjs");
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -32,12 +31,9 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError("User Not Found", 404));
   }
-
   const passwordMatch = await bcrypt.compare(password, user.password);
-
   if (passwordMatch) {
-    const secret = process.env.JWT_SECRET;
-    const token = signToken({ id: user._id }, secret);
+    const token = signToken({ id: user._id });
     if (res.status(201)) {
       res.status(200).json({
         status: "success",
@@ -54,51 +50,42 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const { email } = req.body;
+
   const oldUser = await User.findOne({ email });
   if (!oldUser) {
     return next(new AppError("User Not Exists.", 404));
   }
 
-  const secret = process.env.JWT_SECRET + oldUser.password;
-  const token = signToken({ email: oldUser.email, id: oldUser._id }, secret);
-  const link = `http://127.0.0.1:3000/api/v1/users/resetPasswordForm/${token}`;
-  console.log(link);
-  const status = sendMail(link);
-  if (status) {
+  const token = signToken({ email: oldUser.email, id: oldUser._id });
+  const link = `http://127.0.0.1:3000/api/v1/users/resetPassword/${token}`;
+
+  const emailSent = await sendEmail(link);
+  if (emailSent) {
     res.status(200).json({
       status: "success",
     });
   } else {
-    return next(new AppError("Could not sent email", 500));
+    return next(new AppError("Failed to Send Email", 500));
   }
 });
 
 exports.resetPasswordForm = catchAsync(async (req, res, next) => {
-  const {token} = req.params;
-  const secret = process.env.JWT_SECRET + oldUser.password;
-  const tokenStatus = verifyToken(token, secret);
-  if (tokenStatus == "expired token") {
-    return next(new AppError("token expired", 404));
-  }
-  const oldUser = await User.findById({ _id: tokenStatus.id });
+  const { id, email } = req.tokenData;
+  const oldUser = await User.findById({ _id: id });
   if (!oldUser) {
     return next(new AppError("User Not Exists!", 404));
-  }  
-  res.render("index", { email: tokenStatus.email, status: "Not Verified" });
+  }
+  res.render("index", { email: email, status: "Not Verified" });
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  const { token } = req.params;
-  const { password } = req.body;
-  const secret = process.env.JWT_SECRET + oldUser.password;
-  const tokenStatus = verifyToken(token, secret);
-  if (tokenStatus == "expired token") {
-    return next(new AppError("token expired", 404));
-  }
-  const oldUser = await User.findById({ _id: tokenStatus.id });
+  const { id, email } = req.tokenData;
+  const oldUser = await User.findById({ _id: id });
   if (!oldUser) {
     return next(new AppError("User Not Exists!", 404));
   }
+
+  const { password } = req.body;
   const encryptedPassword = await bcrypt.hash(password, 10);
   await User.findByIdAndUpdate(
     {
@@ -112,5 +99,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
       runValidators: true,
     }
   );
-  res.render("index", { email: tokenStatus.email, status: "verified" });
+
+  res.render("index", { email, status: "verified" });
 });
