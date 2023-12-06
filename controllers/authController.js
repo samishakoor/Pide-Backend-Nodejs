@@ -59,7 +59,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const token = signToken({ email: oldUser.email, id: oldUser._id });
   const link = `http://127.0.0.1:3000/api/v1/users/resetPassword/${token}`;
 
-  const emailSent = await sendEmail(link);
+  const emailSent = await sendEmail(link,oldUser.email);
   if (emailSent) {
     res.status(200).json({
       status: "success",

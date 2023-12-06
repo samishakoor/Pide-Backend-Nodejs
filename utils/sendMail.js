@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-module.exports = async function sendEmail(text) {
+module.exports = async function sendEmail(text, recipientEmail) {
   try {
     // Create a transporter using your email service credentials
     const transporter = nodemailer.createTransport({
@@ -15,7 +15,7 @@ module.exports = async function sendEmail(text) {
 
     const mailOptions = {
       from: "noreply@gmail.com",
-      to: "samishakoor787@gmail.com",
+      to: recipientEmail,
       subject: "Password Reset",
       text: text,
     };
