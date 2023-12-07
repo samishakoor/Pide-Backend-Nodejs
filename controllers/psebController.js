@@ -16,7 +16,7 @@ exports.getAllPsebDocuments = catchAsync(async (res) => {
 
 exports.getPsebDocuments = catchAsync(async (req, res, next) => {
   const user = req.user;
-  const psebDocuments = await Pseb.findById(user._id);
+  const psebDocuments = await Pseb.findOne({ userId: user._id });
   if (!psebDocuments) {
     return next(new AppError("No Pseb Documents found.", 404));
   }
@@ -30,7 +30,7 @@ exports.getPsebDocuments = catchAsync(async (req, res, next) => {
 
 exports.createPsebDocuments = catchAsync(async (req, res) => {
   const user = req.user;
-  const { documents } = req.body;
+  const documents = req.body;
 
   const docs = await Pseb.create({
     ...documents,

@@ -15,7 +15,8 @@ exports.getAllBankDocuments = catchAsync(async (res) => {
 
 exports.getBankDocuments = catchAsync(async (req, res, next) => {
   const user = req.user;
-  const bankDocuments = await Bank.findById(user._id);
+  const bankDocuments = await Bank.findOne({ userId: user._id });
+
   if (!bankDocuments) {
     return next(new AppError("No Bank Documents found.", 404));
   }
@@ -28,10 +29,11 @@ exports.getBankDocuments = catchAsync(async (req, res, next) => {
 });
 
 exports.createBankDocuments = catchAsync(async (req, res) => {
+  console.log("hello world");
   const user = req.user;
-  const { documents } = req.body;
-
-  const docs=await Bank.create({
+  const documents = req.body;
+  console.log(req.body);
+  const docs = await Bank.create({
     ...documents,
     userId: user._id,
   });

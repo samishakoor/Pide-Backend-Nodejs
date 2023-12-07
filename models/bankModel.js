@@ -136,11 +136,9 @@ const memorandumOfAssociationSchema = new mongoose.Schema({
 });
 
 const bankSchema = new mongoose.Schema({
-  
-  
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', 
+    ref: "User",
   },
   cnicOfSignoratory: cnicOfSignoratorySchema,
   letterHead: letterHeadSchema,
@@ -151,16 +149,7 @@ const bankSchema = new mongoose.Schema({
   proofOfBusinessAddress: proofOfBusinessAddressSchema,
   affidavit: affidavitSchema,
   memorandumOfArticles: memorandumOfAssociationSchema,
-  
 
-  director1: {
-    type: String,
-    required: true,
-  },
-  director1: {
-    type: String,
-    required: true,
-  },
   director1: {
     type: String,
     required: true,

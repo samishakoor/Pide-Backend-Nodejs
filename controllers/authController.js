@@ -32,20 +32,22 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError("User Not Found", 404));
   }
   const passwordMatch = await bcrypt.compare(password, user.password);
-  if (passwordMatch) {
-    const token = signToken({ id: user._id });
-    if (res.status(201)) {
-      res.status(200).json({
-        status: "success",
-        data: {
-          token,
-        },
-      });
-    } else {
-      return next(new AppError("Error", 500));
-    }
+
+  if (!passwordMatch) {
+    return next(new AppError("Invalid Password", 404));
   }
-  return next(new AppError("Invalid Password", 404));
+
+  const token = signToken({ id: user._id });
+  if (res.status(201)) {
+    res.status(200).json({
+      status: "success",
+      data: {
+        token,
+      },
+    });
+  } else {
+    return next(new AppError("Error", 500));
+  }
 });
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {

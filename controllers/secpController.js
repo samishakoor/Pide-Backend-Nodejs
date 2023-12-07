@@ -16,7 +16,7 @@ exports.getAllSecpDocuments = catchAsync(async (res) => {
 
 exports.getSecpDocuments = catchAsync(async (req, res, next) => {
   const user = req.user;
-  const secpDocuments = await Secp.findById(user._id);
+  const secpDocuments = await Secp.findOne({ userId: user._id });
   if (!secpDocuments) {
     return next(new AppError("No Secp Documents found.", 404));
   }
@@ -30,7 +30,7 @@ exports.getSecpDocuments = catchAsync(async (req, res, next) => {
 
 exports.createSecpDocuments = catchAsync(async (req, res) => {
   const user = req.user;
-  const { documents } = req.body;
+  const documents = req.body;
 
   const docs = await Secp.create({
     ...documents,
