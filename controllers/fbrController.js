@@ -1,7 +1,6 @@
 const Fbr = require("./../models/fbrModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
-const verifyToken = require("./../utils/verifyToken");
 
 exports.getAllFbrDocuments = catchAsync(async (res) => {
   const allFbrDocuments = await Fbr.find();
@@ -15,8 +14,8 @@ exports.getAllFbrDocuments = catchAsync(async (res) => {
 });
 
 exports.getFbrDocuments = catchAsync(async (req, res, next) => {
-  console.log(req.params);
-  const fbrDocuments = await Fbr.findById(req.params.id);
+  const user = req.user;
+  const fbrDocuments = await Fbr.findById(user._id);
   if (!fbrDocuments) {
     return next(new AppError("No Fbr Documents found.", 404));
   }
@@ -29,12 +28,20 @@ exports.getFbrDocuments = catchAsync(async (req, res, next) => {
 });
 
 exports.createFbrDocuments = catchAsync(async (req, res) => {
-  console.log(req.body);
-  const newFbrDocuments = await Fbr.create(req.body);
+  const user = req.user;
+  const { documents } = req.body;
+
+  const docs=await Fbr.create({
+    ...documents,
+    userId: user._id,
+  });
+
+
+  if (!docs) {
+    return next(new AppError("Unable to create Fbr documents.", 404));
+  }
+
   res.status(201).json({
     status: "success",
-    data: {
-      fbrDocuments: newFbrDocuments,
-    },
   });
 });

@@ -1,7 +1,6 @@
 const Secp = require("./../models/secpModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
-const verifyToken = require("./../utils/verifyToken");
 
 exports.getAllSecpDocuments = catchAsync(async (res) => {
   const allSecpDocuments = await Secp.find();
@@ -16,8 +15,8 @@ exports.getAllSecpDocuments = catchAsync(async (res) => {
 });
 
 exports.getSecpDocuments = catchAsync(async (req, res, next) => {
-  console.log(req.params);
-  const secpDocuments = await Secp.findById(req.params.id);
+  const user = req.user;
+  const secpDocuments = await Secp.findById(user._id);
   if (!secpDocuments) {
     return next(new AppError("No Secp Documents found.", 404));
   }
@@ -30,12 +29,19 @@ exports.getSecpDocuments = catchAsync(async (req, res, next) => {
 });
 
 exports.createSecpDocuments = catchAsync(async (req, res) => {
-  console.log(req.body);
-  const newSecpDocuments = await Secp.create(req.body);
+  const user = req.user;
+  const { documents } = req.body;
+
+  const docs = await Secp.create({
+    ...documents,
+    userId: user._id,
+  });
+
+  if (!docs) {
+    return next(new AppError("Unable to create Secp documents.", 404));
+  }
+
   res.status(201).json({
     status: "success",
-    data: {
-      secpDocuments: newSecpDocuments,
-    },
   });
 });

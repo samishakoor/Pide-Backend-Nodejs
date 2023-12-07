@@ -1,7 +1,6 @@
 const Bank = require("./../models/bankModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
-const verifyToken = require("./../utils/verifyToken");
 
 exports.getAllBankDocuments = catchAsync(async (res) => {
   const allBankDocuments = await Bank.find();
@@ -15,9 +14,8 @@ exports.getAllBankDocuments = catchAsync(async (res) => {
 });
 
 exports.getBankDocuments = catchAsync(async (req, res, next) => {
-  const { id } = req.tokenData;
-
-  const bankDocuments = await Bank.findById(req.params.id);
+  const user = req.user;
+  const bankDocuments = await Bank.findById(user._id);
   if (!bankDocuments) {
     return next(new AppError("No Bank Documents found.", 404));
   }
@@ -30,13 +28,17 @@ exports.getBankDocuments = catchAsync(async (req, res, next) => {
 });
 
 exports.createBankDocuments = catchAsync(async (req, res) => {
-  const { id } = req.tokenData;
+  const user = req.user;
   const { documents } = req.body;
 
-  await Bank.create({
+  const docs=await Bank.create({
     ...documents,
-    userId: id,
+    userId: user._id,
   });
+
+  if (!docs) {
+    return next(new AppError("Unable to create bank documents.", 404));
+  }
 
   res.status(201).json({
     status: "success",

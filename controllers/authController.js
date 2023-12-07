@@ -56,7 +56,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     return next(new AppError("User Not Exists.", 404));
   }
 
-  const token = signToken({id: oldUser._id });
+  const token = signToken({ id: oldUser._id });
   const link = `http://127.0.0.1:3000/api/v1/users/resetPassword/${token}`;
 
   const emailSent = await sendEmail(link, oldUser.email);
@@ -70,7 +70,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.resetPasswordForm = catchAsync(async (req, res, next) => {
-  const {oldUser} = req.rootUser;
+  const oldUser = req.user;
   if (!oldUser) {
     return next(new AppError("User Not Exists!", 404));
   }
@@ -78,7 +78,7 @@ exports.resetPasswordForm = catchAsync(async (req, res, next) => {
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  const {oldUser} = req.rootUser;
+  const oldUser = req.user;
   if (!oldUser) {
     return next(new AppError("User Not Exists!", 404));
   }
@@ -86,7 +86,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   const encryptedPassword = await bcrypt.hash(password, 10);
   await User.findByIdAndUpdate(
     {
-      _id: id,
+      _id: oldUser._id,
     },
     {
       password: encryptedPassword,
@@ -97,5 +97,5 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     }
   );
 
-  res.render("index", { email:oldUser.email, status: true });
+  res.render("index", { email: oldUser.email, status: true });
 });

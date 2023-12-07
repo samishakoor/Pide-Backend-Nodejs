@@ -39,12 +39,8 @@ app.use((err, req, res, next) => {
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'"],
-      connectSrc: ["'self'"],
-      fontSrc: ["'self'"],
     },
   })
 );
@@ -59,6 +55,7 @@ app.use("/api", limiter);
 app.use(mongoSanitize());
 app.use(xss());
 
+//routes
 app.use("/api/v1/pideReg/secp", secpRouter);
 app.use("/api/v1/pideReg/fbr", fbrRouter);
 app.use("/api/v1/pideReg/bank", bankRouter);

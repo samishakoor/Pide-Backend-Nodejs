@@ -17,7 +17,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const {user} = req.rootUser;
+  const user = req.user;
   if (!user) {
     return next(new AppError("User not found", 404));
   }
@@ -31,7 +31,8 @@ exports.getUser = catchAsync(async (req, res, next) => {
 
 exports.updateUser = catchAsync(async (req, res, next) => {
   const { name } = req.body;
-  const { user } = req.rootUser;
+  const user = req.user;
+
   const updatedUser = await User.findByIdAndUpdate(
     { _id: user._id },
     { name: name },
@@ -40,8 +41,8 @@ exports.updateUser = catchAsync(async (req, res, next) => {
       runValidators: true,
     }
   );
-  if (!user) {
-    return next(new AppError("No User Found", 404));
+  if (!updatedUser) {
+    return next(new AppError("Failed to update user", 500));
   }
   res.status(200).json({
     status: "success",
