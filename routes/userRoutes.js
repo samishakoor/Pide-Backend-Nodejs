@@ -1,11 +1,13 @@
 const express = require("express");
+const User = require("./../models/userModel");
+const catchAsync = require("./../utils/catchAsync");
 const userController = require("./../controllers/userController");
 const authController = require("./../controllers/authController");
 
 const verifyToken = require("./../utils/verifyToken");
 const router = express.Router();
 
-const authenticateToken = (req, res, next) => {
+const authenticateToken = catchAsync(async (req, res, next) => {
   let token;
   if (req.params.token) {
     token = req.params.token;
@@ -15,19 +17,20 @@ const authenticateToken = (req, res, next) => {
       token = authHeader.split(" ")[1];
     }
   }
-
   if (!token) {
     return next(new AppError("Token Not Found", 401));
   }
-
-  const tokenStatus = verifyToken(token);
-  if (tokenStatus == "expired token") {
+  const tok = verifyToken(token);
+  if (tok == "expired token") {
     return next(new AppError("token expired", 401));
   }
-
-  req.tokenData = tokenStatus;
+  const rootUser = await User.findById({ _id: tok.id });
+  if (!rootUser) {
+    return next(new AppError("User Not Found", 404));
+  }
+  req.user = rootUser;
   next();
-};
+});
 
 router.post("/signup", authController.signup);
 router.post("/login", authController.login);

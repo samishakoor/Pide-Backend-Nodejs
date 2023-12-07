@@ -4,6 +4,9 @@ const AppError = require("./../utils/appError");
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
+  if (!users) {
+    return next(new AppError("Users not found", 404));
+  }
   res.status(200).json({
     status: "success",
     results: users.length,
@@ -14,9 +17,10 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-
-  const { id } = req.tokenData;
-  const user = await User.findById({ _id: id });
+  const {user} = req.rootUser;
+  if (!user) {
+    return next(new AppError("User not found", 404));
+  }
   res.status(200).json({
     status: "success",
     data: {
@@ -27,9 +31,9 @@ exports.getUser = catchAsync(async (req, res, next) => {
 
 exports.updateUser = catchAsync(async (req, res, next) => {
   const { name } = req.body;
-  const { id } = req.tokenData;
-  const user = await User.findByIdAndUpdate(
-    { _id: id },
+  const { user } = req.rootUser;
+  const updatedUser = await User.findByIdAndUpdate(
+    { _id: user._id },
     { name: name },
     {
       new: true,
@@ -42,7 +46,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: {
-      user,
+      updatedUser,
     },
   });
 });

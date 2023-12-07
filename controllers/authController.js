@@ -70,21 +70,18 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.resetPasswordForm = catchAsync(async (req, res, next) => {
-  const { id, email } = req.tokenData;
-  const oldUser = await User.findById({ _id: id });
+  const {oldUser} = req.rootUser;
   if (!oldUser) {
     return next(new AppError("User Not Exists!", 404));
   }
-  res.render("index", { email, status: false });
+  res.render("index", { email: oldUser.email, status: false });
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  const { id, email } = req.tokenData;
-  const oldUser = await User.findById({ _id: id });
+  const {oldUser} = req.rootUser;
   if (!oldUser) {
     return next(new AppError("User Not Exists!", 404));
   }
-
   const { password } = req.body;
   const encryptedPassword = await bcrypt.hash(password, 10);
   await User.findByIdAndUpdate(
@@ -100,5 +97,5 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     }
   );
 
-  res.render("index", { email, status: true });
+  res.render("index", { email:oldUser.email, status: true });
 });
