@@ -59,6 +59,10 @@ const feeChallanSchema = new mongoose.Schema({
 });
 
 const secpSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   cnic: cnicSchema,
   memorandum: memorandumSchema,
   feeChallan: feeChallanSchema,

@@ -136,6 +136,10 @@ const memorandumOfAssociationSchema = new mongoose.Schema({
 });
 
 const bankSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   cnicOfSignoratory: cnicOfSignoratorySchema,
   letterHead: letterHeadSchema,
   proofOfNtn: proofOfNtnSchema,

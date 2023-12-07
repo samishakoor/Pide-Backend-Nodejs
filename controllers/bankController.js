@@ -14,8 +14,9 @@ exports.getAllBankDocuments = catchAsync(async (res) => {
 });
 
 exports.getBankDocuments = catchAsync(async (req, res, next) => {
-  console.log(req.params);
-  const bankDocuments = await Bank.findById(req.params.id);
+  const user = req.user;
+  const bankDocuments = await Bank.findOne({ userId: user._id });
+
   if (!bankDocuments) {
     return next(new AppError("No Bank Documents found.", 404));
   }
@@ -28,12 +29,20 @@ exports.getBankDocuments = catchAsync(async (req, res, next) => {
 });
 
 exports.createBankDocuments = catchAsync(async (req, res) => {
+  console.log("hello world");
+  const user = req.user;
+  const documents = req.body;
   console.log(req.body);
-  const newBankDocuments = await Bank.create(req.body);
+  const docs = await Bank.create({
+    ...documents,
+    userId: user._id,
+  });
+
+  if (!docs) {
+    return next(new AppError("Unable to create bank documents.", 404));
+  }
+
   res.status(201).json({
     status: "success",
-    data: {
-      bankDocuments: newBankDocuments,
-    },
   });
 });

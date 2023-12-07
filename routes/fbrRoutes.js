@@ -1,13 +1,14 @@
 const express = require("express");
 const fbrController = require("./../controllers/fbrController");
+const authenticateToken = require("./../middlewares/authenticateToken");
 
 const router = express.Router();
 
 router
   .route("/")
   .get(fbrController.getAllFbrDocuments)
-  .post(fbrController.createFbrDocuments);
+  .post(authenticateToken,fbrController.createFbrDocuments);
 
-router.route("/:id").get(fbrController.getFbrDocuments);
+router.route("/userDocs").get(authenticateToken,fbrController.getFbrDocuments);
 
 module.exports = router;

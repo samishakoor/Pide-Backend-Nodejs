@@ -4,6 +4,9 @@ const AppError = require("./../utils/appError");
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
+  if (!users) {
+    return next(new AppError("Users not found", 404));
+  }
   res.status(200).json({
     status: "success",
     results: users.length,
@@ -14,43 +17,37 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  console.log(req.params);
-  const user = await User.findById(req.params.id);
+  const user = req.user;
   if (!user) {
-    return next(new AppError("No User found.", 404));
+    return next(new AppError("User not found", 404));
   }
   res.status(200).json({
     status: "success",
     data: {
       user,
-    },
-  });
-});
-
-exports.createUser = catchAsync(async (req, res) => {
-  console.log(req.body);
-  const newUser = await User.create(req.body);
-  res.status(201).json({
-    status: "success",
-    data: {
-      user: newUser,
     },
   });
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const { name } = req.body;
+  const user = req.user;
 
-  if (!user) {
-    return next(new AppError("No User Found", 404));
+  const updatedUser = await User.findByIdAndUpdate(
+    { _id: user._id },
+    { name: name },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  if (!updatedUser) {
+    return next(new AppError("Failed to update user", 500));
   }
   res.status(200).json({
     status: "success",
     data: {
-      user,
+      updatedUser,
     },
   });
 });

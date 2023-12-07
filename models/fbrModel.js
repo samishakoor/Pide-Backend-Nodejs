@@ -60,6 +60,11 @@ const propertyPapersSchema = new mongoose.Schema({
   },
 });
 const fbrSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+
   cnic: cnicSchema,
   propertyPapers: propertyPapersSchema,
   paidElectricityBill: paidElectricityBillSchema,
