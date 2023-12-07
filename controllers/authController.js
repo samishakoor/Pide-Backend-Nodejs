@@ -56,7 +56,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     return next(new AppError("User Not Exists.", 404));
   }
 
-  const token = signToken({ email: oldUser.email, id: oldUser._id });
+  const token = signToken({id: oldUser._id });
   const link = `http://127.0.0.1:3000/api/v1/users/resetPassword/${token}`;
 
   const emailSent = await sendEmail(link, oldUser.email);
