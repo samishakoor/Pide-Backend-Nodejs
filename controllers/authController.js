@@ -59,7 +59,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const token = signToken({ email: oldUser.email, id: oldUser._id });
   const link = `http://127.0.0.1:3000/api/v1/users/resetPassword/${token}`;
 
-  const emailSent = await sendEmail(link,oldUser.email);
+  const emailSent = await sendEmail(link, oldUser.email);
   if (emailSent) {
     res.status(200).json({
       status: "success",
@@ -75,7 +75,7 @@ exports.resetPasswordForm = catchAsync(async (req, res, next) => {
   if (!oldUser) {
     return next(new AppError("User Not Exists!", 404));
   }
-  res.render("index", { email: email, status: "Not Verified" });
+  res.render("index", { email, status: false });
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
@@ -100,5 +100,5 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     }
   );
 
-  res.render("index", { email, status: "verified" });
+  res.render("index", { email, status: true });
 });

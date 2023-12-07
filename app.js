@@ -5,6 +5,7 @@ const secpRouter = require("./routes/secpRoutes");
 const userRouter = require("./routes/userRoutes");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const path = require("path");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const cors = require("cors");
@@ -14,12 +15,13 @@ require("express-validator");
 
 const app = express();
 app.use(cors());
-app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(helmet());
-app.use(express.static(__dirname));
+
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "pug");
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -33,6 +35,19 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something went wrong!");
 });
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+    },
+  })
+);
 
 const limiter = rateLimit({
   max: 100,

@@ -15,7 +15,8 @@ exports.getAllBankDocuments = catchAsync(async (res) => {
 });
 
 exports.getBankDocuments = catchAsync(async (req, res, next) => {
-  console.log(req.params);
+  const { id } = req.tokenData;
+
   const bankDocuments = await Bank.findById(req.params.id);
   if (!bankDocuments) {
     return next(new AppError("No Bank Documents found.", 404));
@@ -29,16 +30,12 @@ exports.getBankDocuments = catchAsync(async (req, res, next) => {
 });
 
 exports.createBankDocuments = catchAsync(async (req, res) => {
-  const { documents, token } = req.body;
+  const { id } = req.tokenData;
+  const { documents } = req.body;
 
-  const tokenStatus = verifyToken(token);
-  if (tokenStatus == "expired token") {
-    return next(new AppError("token expired", 404));
-  }
-
-  Bank.create({
+  await Bank.create({
     ...documents,
-    userId: tokenStatus.id,
+    userId: id,
   });
 
   res.status(201).json({

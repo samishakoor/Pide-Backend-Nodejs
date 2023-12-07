@@ -1,0 +1,21 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Reset Password
+
+  body
+    if status
+      script.
+        if (confirm("Do you want to login?")) {
+          window.location.href = "http://localhost:3000/";
+        }
+    else  
+      h1= email
+      form(action="", method="post")
+        input(type="password", name="password", id="password", placeholder="password")
+        br
+        br
+        input(type="submit", value="submit")
