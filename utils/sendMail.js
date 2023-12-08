@@ -1,8 +1,7 @@
 const nodemailer = require("nodemailer");
 
-module.exports = async function sendEmail(text, recipientEmail) {
+module.exports = async function sendEmail(link, recipientEmail) {
   try {
-    // Create a transporter using your email service credentials
     const transporter = nodemailer.createTransport({
       host: "smtp.mailtrap.io",
       port: 2525,
@@ -17,7 +16,17 @@ module.exports = async function sendEmail(text, recipientEmail) {
       from: "noreply@gmail.com",
       to: "samishakoor787@gmail.com",
       subject: "Password Reset",
-      text: text,
+      html: `
+      <p>Hello,</p>
+      <p>We received a request to reset your password. Click the button below to reset it.</p>
+      <a href="${link}">
+        <button style="padding: 10px 20px; background-color: #007BFF; color: #ffffff; border: none; border-radius: 5px; text-decoration: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s;">
+          Reset Password
+        </button>
+      </a>
+      <p>If you did not request this password reset, please ignore this email. The link is valid for a limited time.</p>
+      <p>Thank you,<br>PIDE</p>
+    `,
     };
 
     const info = await transporter.sendMail(mailOptions);
