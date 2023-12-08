@@ -1,13 +1,15 @@
 const express = require("express");
 const bankController = require("./../controllers/bankController");
-const authenticateToken = require("./../middlewares/authenticateToken");
+const authenticateUser = require("./../middlewares/userAuth");
 const router = express.Router();
 
 router
   .route("/")
   .get(bankController.getAllBankDocuments)
-  .post(authenticateToken, bankController.createBankDocuments);
+  .post(authenticateUser, bankController.createBankDocuments);
 
-router.route("/userDocs").get(authenticateToken, bankController.getBankDocuments);
+router
+  .route("/userDocs")
+  .get(authenticateUser, bankController.getBankDocuments);
 
 module.exports = router;

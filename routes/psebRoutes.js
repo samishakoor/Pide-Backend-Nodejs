@@ -1,15 +1,15 @@
 const express = require("express");
-const authenticateToken = require("./../middlewares/authenticateToken");
+const authenticateUser = require("./../middlewares/userAuth");
 const psebController = require("./../controllers/psebController");
 const router = express.Router();
 
 router
   .route("/")
   .get(psebController.getAllPsebDocuments)
-  .post(authenticateToken, psebController.createPsebDocuments);
+  .post(authenticateUser, psebController.createPsebDocuments);
 
 router
   .route("/userDocs")
-  .get(authenticateToken, psebController.getPsebDocuments);
+  .get(authenticateUser, psebController.getPsebDocuments);
 
 module.exports = router;

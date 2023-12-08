@@ -1,19 +1,14 @@
-const User = require("./../models/userModel");
-const catchAsync = require("./../utils/catchAsync");
-const AppError = require("./../utils/appError");
-const verifyToken = require("./../utils/verifyToken");
-
-
+const User = require("../models/userModel");
+const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/appError");
+const verifyToken = require("../utils/verifyToken");
 
 module.exports = catchAsync(async (req, res, next) => {
   let token;
-  if (req.params.token) {
-    token = req.params.token;
-  } else {
-    const authHeader = req.headers["authorization"];
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      token = authHeader.split(" ")[1];
-    }
+
+  const authHeader = req.headers["authorization"];
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    token = authHeader.split(" ")[1];
   }
 
   if (!token) {
