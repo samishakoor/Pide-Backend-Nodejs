@@ -29,18 +29,20 @@ exports.getBankDocuments = catchAsync(async (req, res, next) => {
 });
 
 exports.createBankDocuments = catchAsync(async (req, res) => {
-  console.log("hello world");
-  const user = req.user;
-  const documents = req.body;
   console.log(req.body);
-  const docs = await Bank.create({
-    ...documents,
-    userId: user._id,
-  });
+  console.log(req.files);
 
-  if (!docs) {
-    return next(new AppError("Unable to create bank documents.", 404));
-  }
+  // const user = req.user;
+  // const documents = req.body;
+  // console.log(req.body);
+  // const docs = await Bank.create({
+  //   ...documents,
+  //   userId: user._id,
+  // });
+
+  // if (!docs) {
+  //   return next(new AppError("Unable to create bank documents.", 404));
+  // }
 
   res.status(201).json({
     status: "success",
