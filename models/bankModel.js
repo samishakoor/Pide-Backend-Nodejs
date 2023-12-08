@@ -1,135 +1,99 @@
 const mongoose = require("mongoose");
 
 const cnicOfSignoratorySchema = new mongoose.Schema({
-  cnic: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const letterHeadSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const proofOfNtnSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const rubberStampSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const partnershipDeedSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const certificateOfRegistrationSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const proofOfBusinessAddressSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const affidavitSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const memorandumOfAssociationSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },

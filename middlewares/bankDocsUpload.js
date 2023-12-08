@@ -3,7 +3,7 @@ const AppError = require("../utils/appError");
 const multer = require("multer");
 const multerConfig = require("../utils/multerConfig");
 
-const upload = multerConfig("../images/bank").upload.fields([
+const upload = multerConfig("../images/bank").fields([
   { name: "image1", maxCount: 1 },
   { name: "image2", maxCount: 1 },
   { name: "image3", maxCount: 1 },
@@ -14,6 +14,7 @@ const upload = multerConfig("../images/bank").upload.fields([
   { name: "image8", maxCount: 1 },
   { name: "image9", maxCount: 1 },
 ]);
+
 
 module.exports = catchAsync(async (req, res, next) => {
   upload(req, res, function(error) {

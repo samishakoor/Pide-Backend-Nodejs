@@ -18,7 +18,6 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
-app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(helmet());
 
 app.set("views", path.join(__dirname, "views"));
@@ -27,6 +26,9 @@ app.set("view engine", "pug");
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+app.use("/images", express.static(path.join(__dirname, "images")));
+
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();

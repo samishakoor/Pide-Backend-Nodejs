@@ -1,116 +1,88 @@
 const mongoose = require("mongoose");
 
 const cnicOfDirectorSchema = new mongoose.Schema({
-  cnic: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const incorporationCertificateSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const copyOfMouSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const partnershipDeedSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const firmRegistrationCertificateSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const feeChallanSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const businessBankStatementSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
-
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const psebSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+
   cnicOfDirector: cnicOfDirectorSchema,
   incorporationCertificate: incorporationCertificateSchema,
   copyOfMou: copyOfMouSchema,

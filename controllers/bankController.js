@@ -29,20 +29,57 @@ exports.getBankDocuments = catchAsync(async (req, res, next) => {
 });
 
 exports.createBankDocuments = catchAsync(async (req, res) => {
-  console.log(req.body);
-  console.log(req.files);
+  const user = req.user;
+  const { director1, director2, director3 } = req.body;
+  const bankDocuments = req.files;
 
-  // const user = req.user;
-  // const documents = req.body;
-  // console.log(req.body);
-  // const docs = await Bank.create({
-  //   ...documents,
-  //   userId: user._id,
-  // });
+  const uploadedDocs = await Bank.create({
+    userId: user._id,
+    cnicOfSignoratory: {
+      fileName: bankDocuments.image1[0].filename,
+      path: bankDocuments.image1[0].path,
+    },
+    proofOfNtn: {
+      fileName: bankDocuments.image2[0].filename,
+      path: bankDocuments.image2[0].path,
+    },
+    letterHead: {
+      fileName: bankDocuments.image3[0].filename,
+      path: bankDocuments.image3[0].path,
+    },
+    rubberStamp: {
+      fileName: bankDocuments.image4[0].filename,
+      path: bankDocuments.image4[0].path,
+    },
+    partnershipDeed: {
+      fileName: bankDocuments.image5[0].filename,
+      path: bankDocuments.image5[0].path,
+    },
 
-  // if (!docs) {
-  //   return next(new AppError("Unable to create bank documents.", 404));
-  // }
+    certificateOfRegistration: {
+      fileName: bankDocuments.image6[0].filename,
+      path: bankDocuments.image6[0].path,
+    },
+    proofOfBusinessAddress: {
+      fileName: bankDocuments.image7[0].filename,
+      path: bankDocuments.image7[0].path,
+    },
+    affidavit: {
+      fileName: bankDocuments.image8[0].filename,
+      path: bankDocuments.image8[0].path,
+    },
+    memorandumOfArticles: {
+      fileName: bankDocuments.image9[0].filename,
+      path: bankDocuments.image9[0].path,
+    },
+    director1,
+    director2,
+    director3,
+  });
+
+  if (!uploadedDocs) {
+    return next(new AppError("Unable to create bank documents.", 404));
+  }
 
   res.status(201).json({
     status: "success",

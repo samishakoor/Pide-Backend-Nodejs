@@ -3,7 +3,12 @@ const AppError = require("../utils/appError");
 const multer = require("multer");
 const multerConfig = require("../utils/multerConfig");
 
-const upload = multerConfig("../images/fbr").array("images", 2);
+const upload = multerConfig("../images/fbr").fields([
+  { name: "image1", maxCount: 1 },
+  { name: "image2", maxCount: 1 },
+  { name: "image3", maxCount: 1 },
+  { name: "image4", maxCount: 1 },
+]);
 
 module.exports = catchAsync(async (req, res, next) => {
   upload(req, res, function(error) {

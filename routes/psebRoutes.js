@@ -1,7 +1,7 @@
 const express = require("express");
 const authenticateUser = require("./../middlewares/userAuth");
 const psebController = require("./../controllers/psebController");
-const psebDocsUpload = require("../middlewares/psebDocsUpload");
+const psebDocsUpload = require("./../middlewares/psebDocsUpload");
 const router = express.Router();
 
 router

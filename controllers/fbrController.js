@@ -29,14 +29,33 @@ exports.getFbrDocuments = catchAsync(async (req, res, next) => {
 
 exports.createFbrDocuments = catchAsync(async (req, res) => {
   const user = req.user;
-  const documents = req.body;
+  const { contactNumber, emailAddress, natureOfBusiness } = req.body;
+  const fbrDocuments = req.files;
 
-  const docs = await Fbr.create({
-    ...documents,
+  const uploadedDocs = await Fbr.create({
     userId: user._id,
+    cnic: {
+      fileName: fbrDocuments.image1[0].filename,
+      path: fbrDocuments.image1[0].path,
+    },
+    propertyPapers: {
+      fileName: fbrDocuments.image4[0].filename,
+      path: fbrDocuments.image4[0].path,
+    },
+    paidElectricityBill: {
+      fileName: fbrDocuments.image2[0].filename,
+      path: fbrDocuments.image2[0].path,
+    },
+    businessLetterHead: {
+      fileName: fbrDocuments.image3[0].filename,
+      path: fbrDocuments.image3[0].path,
+    },
+    contactNumber,
+    emailAddress,
+    natureOfBusiness,
   });
 
-  if (!docs) {
+  if (!uploadedDocs) {
     return next(new AppError("Unable to create Fbr documents.", 404));
   }
 
