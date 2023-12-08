@@ -1,7 +1,7 @@
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
-const auth = require("../utils/verifyToken");
+const verifyToken = require("../utils/verifyToken");
 
 module.exports = catchAsync(async (req, res, next) => {
   let token;
@@ -13,9 +13,10 @@ module.exports = catchAsync(async (req, res, next) => {
     return next(new AppError("Token Not Found", 401));
   }
 
-  const tok = auth.verifyTokenForPasswordReset(token);
+  const tok = verifyToken(token);
   if (tok == "expired") {
     res.render("tokenExpired");
+    return next(new AppError("token expired", 401));
   }
 
   const rootUser = await User.findById({ _id: tok.id });
