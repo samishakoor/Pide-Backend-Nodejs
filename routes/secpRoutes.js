@@ -1,15 +1,15 @@
 const express = require("express");
 const secpController = require("./../controllers/secpController");
-const authenticateToken = require("./../middlewares/authenticateToken");
+const authenticateUser = require("./../middlewares/userAuth");
 const router = express.Router();
 
 router
   .route("/")
   .get(secpController.getAllSecpDocuments)
-  .post(authenticateToken, secpController.createSecpDocuments);
+  .post(authenticateUser, secpController.createSecpDocuments);
 
 router
   .route("/userDocs")
-  .get(authenticateToken, secpController.getSecpDocuments);
+  .get(authenticateUser, secpController.getSecpDocuments);
 
 module.exports = router;

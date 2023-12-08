@@ -1,14 +1,14 @@
 const express = require("express");
 const fbrController = require("./../controllers/fbrController");
-const authenticateToken = require("./../middlewares/authenticateToken");
+const authenticateUser = require("../middlewares/userAuth");
 
 const router = express.Router();
 
 router
   .route("/")
   .get(fbrController.getAllFbrDocuments)
-  .post(authenticateToken,fbrController.createFbrDocuments);
+  .post(authenticateUser, fbrController.createFbrDocuments);
 
-router.route("/userDocs").get(authenticateToken,fbrController.getFbrDocuments);
+router.route("/userDocs").get(authenticateUser, fbrController.getFbrDocuments);
 
 module.exports = router;
