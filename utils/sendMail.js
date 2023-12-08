@@ -14,7 +14,7 @@ module.exports = async function sendEmail(link, recipientEmail) {
 
     const mailOptions = {
       from: "noreply@gmail.com",
-      to: "samishakoor787@gmail.com",
+      to: recipientEmail,
       subject: "Password Reset",
       html: `
       <p>Hello,</p>

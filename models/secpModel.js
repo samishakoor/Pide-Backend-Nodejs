@@ -1,58 +1,42 @@
 const mongoose = require("mongoose");
 
 const cnicSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const memorandumSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 const complianceFormSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 const feeChallanSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },

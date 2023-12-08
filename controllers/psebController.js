@@ -30,14 +30,42 @@ exports.getPsebDocuments = catchAsync(async (req, res, next) => {
 
 exports.createPsebDocuments = catchAsync(async (req, res) => {
   const user = req.user;
-  const documents = req.body;
+  const psebDocuments = req.files;
 
-  const docs = await Pseb.create({
-    ...documents,
+  const uploadedDocs = await Pseb.create({
     userId: user._id,
+    cnicOfDirector: {
+      fileName: psebDocuments.image1[0].filename,
+      path: psebDocuments.image1[0].path,
+    },
+    copyOfMou: {
+      fileName: psebDocuments.image2[0].filename,
+      path: psebDocuments.image2[0].path,
+    },
+    incorporationCertificate: {
+      fileName: psebDocuments.image3[0].filename,
+      path: psebDocuments.image3[0].path,
+    },
+    partnershipDeed: {
+      fileName: psebDocuments.image4[0].filename,
+      path: psebDocuments.image4[0].path,
+    },
+
+    firmRegistrationCertificate: {
+      fileName: psebDocuments.image5[0].filename,
+      path: psebDocuments.image5[0].path,
+    },
+    feeChallan: {
+      fileName: psebDocuments.image6[0].filename,
+      path: psebDocuments.image6[0].path,
+    },
+    businessBankStatement: {
+      fileName: psebDocuments.image7[0].filename,
+      path: psebDocuments.image7[0].path,
+    },
   });
 
-  if (!docs) {
+  if (!uploadedDocs) {
     return next(new AppError("Unable to create Pseb documents.", 404));
   }
 

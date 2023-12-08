@@ -1,12 +1,13 @@
 const express = require("express");
 const bankController = require("./../controllers/bankController");
 const authenticateUser = require("./../middlewares/userAuth");
+const bankDocsUpload = require("./../middlewares/bankDocsUpload");
 const router = express.Router();
 
 router
   .route("/")
   .get(bankController.getAllBankDocuments)
-  .post(authenticateUser, bankController.createBankDocuments);
+  .post(authenticateUser, bankDocsUpload, bankController.createBankDocuments);
 
 router
   .route("/userDocs")

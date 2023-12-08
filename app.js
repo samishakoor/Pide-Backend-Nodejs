@@ -26,6 +26,9 @@ app.set("view engine", "pug");
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+app.use("/images", express.static(path.join(__dirname, "images")));
+
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();

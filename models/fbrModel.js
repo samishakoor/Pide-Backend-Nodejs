@@ -1,60 +1,44 @@
 const mongoose = require("mongoose");
 
 const cnicSchema = new mongoose.Schema({
-  cnic: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const paidElectricityBillSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const businessLetterHeadSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
 });
 
 const propertyPapersSchema = new mongoose.Schema({
-  name: {
+  fileName: {
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  data: {
+  path: {
     type: String,
     required: true,
   },
