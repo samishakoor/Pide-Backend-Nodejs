@@ -16,11 +16,13 @@ module.exports = catchAsync(async (req, res, next) => {
   }
 
   const tok = verifyToken(token);
-  if (tok == "expired token") {
+
+  if (tok === "expired") {
     return next(new AppError("token expired", 401));
   }
 
   const rootUser = await User.findById({ _id: tok.id });
+
   if (!rootUser) {
     return next(new AppError("User Not Found", 401));
   }
