@@ -35,7 +35,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     return next(new AppError("Unable to store salt", 500));
   }
 
-  res.status(200).json({
+  res.status(201).json({
     status: "success",
   });
 });
@@ -58,7 +58,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
   const storedEncryptedPassword = user.password;
   if (enteredEncryptedPassword !== storedEncryptedPassword) {
-    return next(new AppError("Invalid Password", 401));
+    return next(new AppError("Invalid Password", 404));
   }
 
   const token = auth.signToken({ id: user._id });
