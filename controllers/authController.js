@@ -1,22 +1,39 @@
 const User = require("./../models/userModel");
+const Salt = require("./../models/saltModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const auth = require("./../utils/signToken");
 const sendEmail = require("./../utils/sendMail");
+const genSalt = require("./../utils/generateSalt");
 const bcrypt = require("bcryptjs");
 
 exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, password } = req.body;
-  const encryptedPassword = await bcrypt.hash(password, 10);
   const oldUser = await User.findOne({ email });
   if (oldUser) {
     return next(new AppError("User Already Exists.", 404));
   }
-  await User.create({
+
+  const salt = await genSalt();
+  const encryptedPassword = await bcrypt.hash(password, salt);
+  const user = await User.create({
     name,
     email,
     password: encryptedPassword,
   });
+
+  if (!user) {
+    return next(new AppError("Unable to create User", 500));
+  }
+
+  const generatedSalt = await Salt.create({
+    userId: user._id,
+    salt: salt,
+  });
+
+  if (!generatedSalt) {
+    return next(new AppError("Unable to store salt", 500));
+  }
 
   res.status(200).json({
     status: "success",
@@ -30,10 +47,18 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError("User Not Found", 404));
   }
-  const passwordMatch = await bcrypt.compare(password, user.password);
 
-  if (!passwordMatch) {
-    return next(new AppError("Invalid Password", 404));
+  const salt = await Salt.findOne({ userId: user._id });
+
+  if (!salt) {
+    return next(new AppError("Unable to find salt", 404));
+  }
+
+  const enteredEncryptedPassword = await bcrypt.hash(password, salt.salt);
+
+  const storedEncryptedPassword = user.password;
+  if (enteredEncryptedPassword !== storedEncryptedPassword) {
+    return next(new AppError("Invalid Password", 401));
   }
 
   const token = auth.signToken({ id: user._id });
@@ -78,8 +103,10 @@ exports.resetPasswordForm = catchAsync(async (req, res, next) => {
 exports.resetPassword = catchAsync(async (req, res, next) => {
   const oldUser = req.user;
   const { password } = req.body;
-  const encryptedPassword = await bcrypt.hash(password, 10);
-  await User.findByIdAndUpdate(
+
+  const salt = await genSalt();
+  const encryptedPassword = await bcrypt.hash(password, salt);
+  const updatedUser = await User.findByIdAndUpdate(
     {
       _id: oldUser._id,
     },
@@ -91,6 +118,27 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
       runValidators: true,
     }
   );
+
+  if (!updatedUser) {
+    return next(new AppError("Unable to update password", 500));
+  }
+
+  const generatedSalt = await Salt.findOneAndUpdate(
+    {
+      userId: updatedUser._id,
+    },
+    {
+      salt: salt,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!generatedSalt) {
+    return next(new AppError("Unable to store salt", 500));
+  }
 
   res.render("resetPassword", { email: oldUser.email, status: true });
 });

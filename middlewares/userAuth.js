@@ -22,7 +22,7 @@ module.exports = catchAsync(async (req, res, next) => {
 
   const rootUser = await User.findById({ _id: tok.id });
   if (!rootUser) {
-    return next(new AppError("User Not Found", 404));
+    return next(new AppError("User Not Found", 401));
   }
 
   req.user = rootUser;
