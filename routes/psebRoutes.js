@@ -9,8 +9,6 @@ router
   .get(psebController.getAllPsebDocuments)
   .post(authenticateUser, psebDocsUpload, psebController.createPsebDocuments);
 
-router
-  .route("/userDocs")
-  .get(authenticateUser, psebController.getPsebDocuments);
+router.route("/docs").get(authenticateUser, psebController.getPsebDocuments);
 
 module.exports = router;

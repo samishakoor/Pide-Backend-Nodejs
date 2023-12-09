@@ -10,7 +10,7 @@ router
   .post(authenticateUser, bankDocsUpload, bankController.createBankDocuments);
 
 router
-  .route("/userDocs")
+  .route("/docs")
   .get(authenticateUser, bankController.getBankDocuments);
 
 module.exports = router;

@@ -8,6 +8,7 @@ router
   .route("/")
   .get(fbrController.getAllFbrDocuments)
   .post(authenticateUser, fbrDocsUpload, fbrController.createFbrDocuments);
-router.route("/userDocs").get(authenticateUser, fbrController.getFbrDocuments);
+
+router.route("/docs").get(authenticateUser, fbrController.getFbrDocuments);
 
 module.exports = router;

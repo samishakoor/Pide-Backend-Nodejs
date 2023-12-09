@@ -10,7 +10,7 @@ router
   .post(secpDocsUpload, secpController.createSecpDocuments);
 
 router
-  .route("/userDocs")
+  .route("/docs")
   .get(authenticateUser, secpController.getSecpDocuments);
 
 module.exports = router;
