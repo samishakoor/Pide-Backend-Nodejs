@@ -7,10 +7,8 @@ const router = express.Router();
 router
   .route("/")
   .get(secpController.getAllSecpDocuments)
-  .post(secpDocsUpload, secpController.createSecpDocuments);
+  .post(authenticateUser, secpDocsUpload, secpController.createSecpDocuments);
 
-router
-  .route("/userDocs")
-  .get(authenticateUser, secpController.getSecpDocuments);
+router.route("/docs").get(authenticateUser, secpController.getSecpDocuments);
 
 module.exports = router;
